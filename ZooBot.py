@@ -1,9 +1,5 @@
-from telebot.async_telebot import AsyncTeleBot
-from telebot import types
+from telebot.async_telebot import AsyncTeleBot, types
 import asyncio
-
-import webbrowser
-import sqlite3
 
 from config import TOKEN
 from function import get_key
@@ -13,19 +9,6 @@ from text import text
 bot = AsyncTeleBot(TOKEN)
 
 users = {}
-
-# @bot.message_handler(commands=['hi'])
-# def hi(message):
-#     conn = sqlite3.connect('BdZoo.sql')
-#     cur = conn.cursor()
-#
-#     cur.execute('CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, name varchar(50), rezult varchart(10))')
-#     conn.commit()
-#     cur.close()
-#     conn.close()
-#
-#     bot.send_message()
-
 
 @bot.message_handler(commands=['start'])
 async def welcome(message):
@@ -47,10 +30,10 @@ async def welcome(message):
     print(users)
 
 
-
 @bot.message_handler(func=lambda message: message.text == 'Пройти тест')
 async def start(message):
     markup = types.ReplyKeyboardMarkup()
+
     btn1 = types.KeyboardButton('На болоте с комарами!')
     btn2 = types.KeyboardButton('На пляже или путешествуя по морю!')
     markup.row(btn1, btn2)
@@ -64,49 +47,52 @@ async def start(message):
     markup.row(btn5, btn6)
 
     await bot.send_message(message.chat.id, "На какой местности вы предпочитаете проводить время?", reply_markup=markup)
-    await bot.register_next_step_handler(message, start_func)
-
+    await start_func(btn2)
+    #bot.register_next_step_handler(message, start_func)
+    print('aaa')
 
 
 async def start_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
-
+    print('kkk')
     if message.text == 'На болоте с комарами!':
         rezult.clear()
-        rezult.append('swamp')
-        await bot.register_next_step_handler(message, pre_herb)
+        msg = rezult.append('swamp')
+        #await bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await pre_herb(msg)
 
     elif message.text == 'На пляже или путешествуя по морю!':
         rezult.clear()
-        rezult.append('ocean')
-        await bot.register_next_step_handler(message, ocean)
+        msg =rezult.append('ocean')
+        #msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await ocean(msg)
 
     elif message.text == 'В лесах или джунглях!':
         rezult.clear()
-        rezult.append('wood_jungles')
-        await bot.register_next_step_handler(message, pre_herb)
+        msg =rezult.append('wood_jungles')
+       # msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await pre_herb(msg)
 
     elif message.text == 'В степях или пустынях!':
         rezult.clear()
-        rezult.append('plain_dune')
-        await bot.register_next_step_handler(message, pre_herb)
+        msg =rezult.append('plain_dune')
+       # msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await pre_herb(msg)
 
     elif message.text == 'В горах!':
         rezult.clear()
-        rezult.append('mount')
-        await bot.register_next_step_handler(message, pre_herb)
+        msg =rezult.append('mount')
+       # msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await pre_herb(msg)
 
     elif message.text == 'В пещере, где темно и сыро!':
         rezult.clear()
-        rezult.append('bats')
-        await bot.register_next_step_handler(message, step_1)
+        msg =rezult.append('bats')
+       # msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await step_1(msg)
 
-    else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, start)
-
-    await bot.send_message(message.chat.id, 'Нажмите продолжить!', reply_markup=markup)
+    # else:
+    #     msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+    #     await start(msg)
     print(users)
 
 
@@ -122,21 +108,19 @@ async def ocean(message):
 
 
 async def ocean_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
     if message.text == 'Холод':
         rezult.append('south')
-        await bot.register_next_step_handler(message, south)
+        msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await south(msg)
 
     elif message.text == 'Жара':
         rezult.append('nord')
-        await bot.register_next_step_handler(message, pre_herb)
+        msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await pre_herb(msg)
 
     else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, ocean)
-
-    await bot.send_message(message.chat.id, "Нажмите продолжить!", reply_markup=markup)
+        msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+        await ocean(msg)
     print(users)
 
 
@@ -154,8 +138,6 @@ async def south(message):
 
 
 async def south_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
     if message.text == 'Купаться в море!':
         rezult.append('turtle')
 
@@ -166,11 +148,11 @@ async def south_func(message):
         rezult.append('stork')
 
     else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, south)
+        msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+        await south(msg)
 
-    await bot.send_message(message.chat.id, "Нажмите продолжить!", reply_markup=markup)
-    await bot.register_next_step_handler(message, step_1)
+    msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+    await step_1(msg)
     print(users)
 
 async def pre_herb(message):
@@ -185,41 +167,47 @@ async def pre_herb(message):
 
 
 async def pre_herb_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
     if message.text == 'Мне важно контролировать то что происходит вокруг меня!':
         rezult.append('predatory')
         if rezult[0] == 'wood_jungles':
-            await bot.register_next_step_handler(message, wood)
+            msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+            await wood(msg)
         elif rezult[0] == 'plain_dune':
-            await bot.register_next_step_handler(message, plain_predatory)
+            msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+            await plain_predatory(msg)
         elif rezult[0] == 'mount':
-            await bot.register_next_step_handler(message, plain_predatory)
+            msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+            await plain_predatory(msg)
         elif rezult[0] == 'swamp':
-            await bot.register_next_step_handler(message, step_1)
+            msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+            await step_1(msg)
         elif rezult[1] == 'nord':
-            await bot.register_next_step_handler(message, step_1)
+            msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+            await step_1(msg)
 
     elif message.text == 'Просто радуюсь жизни и получаю от неё удовольствие!':
         rezult.append('herbivores')
         if rezult[0] == 'wood_jungles':
-            await bot.register_next_step_handler(message, wood)
+            msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+            await wood(msg)
         elif rezult[0] == 'plain_dune':
-            await bot.register_next_step_handler(message, plain_herbivores)
+            msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+            await plain_herbivores(msg)
         elif rezult[0] == 'mount':
-            await bot.register_next_step_handler(message, step_1)
+            msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+            await step_1(msg)
         elif rezult[0] == 'swamp':
-            await bot.register_next_step_handler(message, step_1)
+            msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+            await step_1(msg)
         elif rezult[1] == 'nord':
-            await bot.register_next_step_handler(message, step_1)
+            msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+            await step_1(msg)
 
     else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, pre_herb)
-
-    await bot.send_message(message.chat.id, "Нажмите продолжить!", reply_markup=markup)
-    print(rezult)
+        msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+        await pre_herb(msg)
     print(users)
+
 
 async def wood(message):
     markup = types.ReplyKeyboardMarkup()
@@ -239,8 +227,6 @@ async def wood(message):
 
 
 async def wood_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
     if message.text == 'Там где чисто!':
         if rezult[1] == 'predatory':
             rezult.append('cats')
@@ -272,12 +258,11 @@ async def wood_func(message):
             rezult.append('sparrow')
 
     else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, wood)
+        msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+        await wood(msg)
 
-    await bot.send_message(message.chat.id, "Нажмите продолжить!", reply_markup=markup)
-    await bot.register_next_step_handler(message, step_1)
-    print(rezult)
+    msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+    await step_1(msg)
     print(users)
 
 
@@ -295,8 +280,6 @@ async def plain_predatory(message):
 
 
 async def plain_predatory_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
     if message.text == 'Не суечусь, не тороплюсь, но когда надо всё сделаю!':
         rezult.append('cats')
 
@@ -307,13 +290,13 @@ async def plain_predatory_func(message):
         rezult.append('dogs')
 
     else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, plain_predatory)
+        msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+        await plain_predatory(msg)
 
-    await bot.send_message(message.chat.id, "Нажмите продолжить!", reply_markup=markup)
-    await bot.register_next_step_handler(message, step_1)
-    print(rezult)
+    msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+    await step_1(msg)
     print(users)
+
 
 async def plain_herbivores(message):
     markup = types.ReplyKeyboardMarkup()
@@ -334,37 +317,39 @@ async def plain_herbivores(message):
 
 
 async def plain_herbivores_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
     if message.text == 'incomplete_teeth':
         rezult.append('incomplete_teeth')
-        await bot.register_next_step_handler(message, step_1)
+        msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await step_1(msg)
 
     elif message.text == 'birds':
         rezult.append('birds')
-        await bot.register_next_step_handler(message, birds)
+        msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await birds(msg)
 
     elif message.text == 'rodents':
         rezult.append('rodents')
-        await bot.register_next_step_handler(message, step_1)
+        msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await step_1(msg)
 
     elif message.text == 'marsupials':
         rezult.append('marsupials')
-        await bot.register_next_step_handler(message, step_1)
+        msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await step_1(msg)
 
     elif message.text == 'ungulates':
         rezult.append('ungulates')
-        await bot.register_next_step_handler(message, step_1)
+        msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await step_1(msg)
 
     elif message.text == 'artiodactyls':
         rezult.append('artiodactyls')
-        await bot.register_next_step_handler(message, step_1)
+        msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+        await step_1(msg)
 
     else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, plain_herbivores)
-
-    await bot.send_message(message.chat.id, "Нажмите продолжить!", reply_markup=markup)
+        msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+        await plain_herbivores(msg)
     print(users)
 
 
@@ -387,8 +372,6 @@ async def birds(message):
 
 
 async def birds_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
     if message.text == 'cancerous':
         rezult.append('cancerous')
 
@@ -408,11 +391,11 @@ async def birds_func(message):
         rezult.append('turaco')
 
     else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, birds)
+        msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+        await birds(msg)
 
-    await bot.send_message(message.chat.id, "Нажмите продолжить!", reply_markup=markup)
-    await bot.register_next_step_handler(message, step_1)
+    msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+    await step_1(msg)
     print(users)
 
 
@@ -432,8 +415,6 @@ async def step_1(message):
 
 
 async def step_1_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
     global points
     if message.text == 'A':
         points = 0
@@ -452,11 +433,11 @@ async def step_1_func(message):
         points += 20
 
     else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, step_1)
+        msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+        await step_1(msg)
 
-    await bot.send_message(message.chat.id, "Нажмите продолжить!", reply_markup=markup)
-    await bot.register_next_step_handler(message, step_2)
+    msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+    await step_2(msg)
 
 
 async def step_2(message):
@@ -474,8 +455,6 @@ async def step_2(message):
 
 
 async def step_2_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
     global points
     if message.text == 'A':
         points += 5
@@ -490,11 +469,12 @@ async def step_2_func(message):
         points += 20
 
     else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, step_2)
+        msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+        await step_2(msg)
 
-    await bot.send_message(message.chat.id, "Нажмите продолжить!", reply_markup=markup)
-    await bot.register_next_step_handler(message, step_3)
+    msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+    await step_3(msg)
+    print(points)
 
 
 async def step_3(message):
@@ -512,8 +492,6 @@ async def step_3(message):
 
 
 async def step_3_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
     global points
     if message.text == 'A':
         points += 5
@@ -528,11 +506,11 @@ async def step_3_func(message):
         points += 20
 
     else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, step_3)
+        msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+        await step_3(msg)
 
-    await bot.send_message(message.chat.id, "Нажмите продолжить!", reply_markup=markup)
-    await bot.register_next_step_handler(message, step_4)
+    msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+    await step_4(msg)
 
 
 async def step_4(message):
@@ -550,8 +528,6 @@ async def step_4(message):
 
 
 async def step_4_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
     global points
     if message.text == 'A':
         points += 5
@@ -566,11 +542,11 @@ async def step_4_func(message):
         points += 20
 
     else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, step_4)
+        msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+        await step_4(msg)
 
-    await bot.send_message(message.chat.id, "Нажмите продолжить!", reply_markup=markup)
-    await bot.register_next_step_handler(message, step_5)
+    msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+    await step_5(msg)
 
 
 async def step_5(message):
@@ -588,8 +564,6 @@ async def step_5(message):
 
 
 async def step_5_func(message):
-    markup = types.ReplyKeyboardMarkup()
-    markup.add(types.KeyboardButton('Продолжить'))
     global points
     if message.text == 'A':
         points += 5
@@ -604,11 +578,11 @@ async def step_5_func(message):
         points += 20
 
     else:
-        await bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
-        await bot.register_next_step_handler(message, step_5)
+        msg = bot.send_message(message.chat.id, "Чтобы пройти дальше Вам надо ответить на вопрос!")
+        await step_5(msg)
 
-    await bot.send_message(message.chat.id, "Нажмите продолжить!", reply_markup=markup)
-    await bot.register_next_step_handler(message, step_end)
+    msg = bot.send_message(message.chat.id, "Ваш ответ принят!")
+    await step_end(msg)
 
     print(points)
 
@@ -626,13 +600,13 @@ async def step_end(message):
     btn5 = types.KeyboardButton('Стать опекуном!')
     markup.row(btn5)
 
-    image = get_key(animals, points, rezult)
-    text_id = get_key(text, points, rezult)
-    file = open(image, 'rb')
-    await bot.send_photo(message.chat.id, file)
+    #image = get_key(animals, points, rezult)
+    #text_id = get_key(text, points, rezult)
+    #file = open(image, 'rb')
+    #await bot.send_photo(message.chat.id, file)
     await bot.send_message(message.chat.id, "Ваше тотемное животное!")
-    await bot.send_message(message.chat.id, text_id, reply_markup=markup)
-    await bot.send_message(message.chat.id, "Присоединитесь к сохранению исчезающих видов – станьте опекуном.")
+    #await bot.send_message(message.chat.id, text_id)
+    await bot.send_message(message.chat.id, "Присоединитесь к сохранению исчезающих видов – станьте опекуном.", reply_markup=markup)
     await bot.register_next_step_handler(message, step_end_func)
 
 
@@ -652,8 +626,8 @@ async def step_end_func(message):
     elif message.text == 'Оставить отзыв!':
         await bot.register_next_step_handler(message, start)
 
-    elif message.text == 'Стать опекуном!':
-        webbrowser.open('https://primer.ru')
+    # elif message.text == 'Стать опекуном!':
+    #     webbrowser.open('https://primer.ru')
 
     else:
         await bot.send_message(message.chat.id, "Выберите функцию!")
