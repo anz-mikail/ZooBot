@@ -325,3 +325,49 @@ def btn_step_end():
         keyboard=[btn, btn1])
     return markup
 
+def btn_statement():
+    btn = [
+        KeyboardButton(text='Повторить ещё'),
+        KeyboardButton(text='Поделиться')
+    ]
+    btn1 = [
+        KeyboardButton(text='Оставить отзыв!')
+    ]
+    markup = ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        one_time_keyboard=True,
+        input_field_placeholder="Выберите функцию!",
+        keyboard=[btn, btn1])
+    return markup
+
+
+def btn_post():
+    btn = [
+        KeyboardButton(text='Повторить ещё'),
+    ]
+    btn1 = [
+        KeyboardButton(text='Связаться с оператором'),
+        KeyboardButton(text='Оставить отзыв!')
+    ]
+    markup = ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        one_time_keyboard=True,
+        input_field_placeholder="Выберите функцию!",
+        keyboard=[btn, btn1])
+    return markup
+
+
+def btn_comment():
+    btn = [
+        KeyboardButton(text='Повторить ещё'),
+        KeyboardButton(text='Поделиться')
+    ]
+    btn1 = [
+        KeyboardButton(text='Связаться с оператором'),
+    ]
+    markup = ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        one_time_keyboard=True,
+        input_field_placeholder="Выберите функцию!",
+        keyboard=[btn, btn1])
+    return markup

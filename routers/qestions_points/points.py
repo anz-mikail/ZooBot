@@ -26,7 +26,6 @@ async def step_2(message: types.Message):
         users[id]['point'] += 20
     await message.answer(answer['step_2']['question'],
                          reply_markup=btn_step2())
-    print('point', users)
 
 
 @router.message(F.text.in_(text_step_2))
@@ -45,7 +44,6 @@ async def step_3(message: types.Message):
         users[id]['point'] += 20
     await message.answer(answer['step_3']['question'],
                          reply_markup=btn_step3())
-    print('point', users)
 
 
 @router.message(F.text.in_(text_step_3))
@@ -64,7 +62,6 @@ async def step_4(message: types.Message):
         users[id]['point'] += 20
     await message.answer(answer['step_4']['question'],
                          reply_markup=btn_step4())
-    print('point', users)
 
 
 @router.message(F.text.in_(text_step_4))
@@ -83,7 +80,6 @@ async def step_5(message: types.Message):
         users[id]['point'] += 20
     await message.answer(answer['step_5']['question'],
                          reply_markup=btn_step5())
-    print('point', users)
 
 
 @router.message(F.text.in_(text_step_5))
@@ -102,7 +98,6 @@ async def step_6(message: types.Message):
         users[id]['point'] += 20
     await message.answer(answer['step_6']['question'],
                          reply_markup=btn_step6())
-    print('point', users)
 
 
 @router.message(F.text.in_(text_step_6))
@@ -121,7 +116,6 @@ async def step_7(message: types.Message):
         users[id]['point'] += 20
     await message.answer(answer['step_7']['question'],
                          reply_markup=btn_step7())
-    print('point', users)
 
 
 @router.message(F.text.in_(text_step_7))
@@ -140,7 +134,6 @@ async def step_8(message: types.Message):
         users[id]['point'] += 20
     await message.answer(answer['step_8']['question'],
                          reply_markup=btn_step8())
-    print('point', users)
 
 
 @router.message(F.text.in_(text_step_8))
@@ -159,7 +152,6 @@ async def step_9(message: types.Message):
         users[id]['point'] += 20
     await message.answer(answer['step_9']['question'],
                          reply_markup=btn_step9())
-    print('point', users)
 
 
 @router.message(F.text.in_(text_step_9))
@@ -178,5 +170,4 @@ async def step_10(message: types.Message):
         users[id]['point'] += 20
     await message.answer(answer['step_10']['question'],
                          reply_markup=btn_step10())
-    print('point', users)
 

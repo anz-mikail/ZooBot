@@ -5,17 +5,22 @@ from Buttons import btn_start, btn_ocean, btn_south, btn_pre_herb, btn_wood, btn
 from answer import answer
 from config import text_ocean, text_south, text_pre_herb, text_predatory, text_herbivores, text_birds, text_step_birds,\
     text_step_south_bats, text_step_wood, text_step_plain, text_start
+from logger import BotLogger
 
 
 router = Router()
 
 users = {}
 
+logger = BotLogger('bot.log')
+
 
 @router.message(F.text.in_(text_start))
 async def start(message: types.Message):
     global rezult
     user = message.from_user
+    logger.log_info(f"Пользователь {user.full_name} "
+                    f"начал викторину")
     id = message.chat.id
     users[id] = {}
     users[id]['name'] = user.full_name
@@ -24,7 +29,6 @@ async def start(message: types.Message):
     rezult = users[id]['code']
     await message.answer(answer['start']['question'],
                          reply_markup=btn_start())
-    print(users)
 
 
 @router.message(F.text.in_(text_ocean))
@@ -34,7 +38,6 @@ async def ocean(message: types.Message):
     rezult.append('ocean')
     await message.answer(answer['ocean']['question'],
                          reply_markup=btn_ocean())
-    print(users)
 
 
 @router.message(F.text.in_(text_south))
@@ -43,7 +46,6 @@ async def south(message: types.Message):
     rezult.append('south')
     await message.answer(answer['south']['question'],
                          reply_markup=btn_south())
-    print(users)
 
 
 @router.message(F.text.in_(text_pre_herb))
@@ -69,7 +71,6 @@ async def pre_herb(message: types.Message):
         rezult.append('nord')
     await message.answer(answer['pre_herb']['question'],
                          reply_markup=btn_pre_herb()),
-    print(users)
 
 
 @router.message(F.text.in_(text_predatory))
@@ -87,7 +88,6 @@ async def predatory(message: types.Message):
 
     else:
         await message.answer(answer['step_1']['question'], reply_markup=btn_step1())
-    print(users)
 
 
 @router.message(F.text.in_(text_herbivores))
@@ -102,7 +102,6 @@ async def herbivores(message: types.Message):
 
     else:
         await message.answer(answer['step_1']['question'], reply_markup=btn_step1())
-    print(users)
 
 
 @router.message(F.text.in_(text_birds))
@@ -111,7 +110,6 @@ async def birds(message: types.Message):
     rezult.append('birds')
     await message.answer(answer['birds']['question'],
                          reply_markup=btn_birds())
-    print(users)
 
 
 @router.message(F.text.in_(text_step_birds))
@@ -136,7 +134,6 @@ async def step_birds(message: types.Message):
         rezult.append('turaco')
     await message.answer(answer['step_1']['question'],
                          reply_markup=btn_step1())
-    print(users)
 
 
 @router.message(F.text.in_(text_step_south_bats))
@@ -156,7 +153,6 @@ async def south_bats(message: types.Message):
         rezult.append('stork')
     await message.answer(answer['step_1']['question'],
                          reply_markup=btn_step1())
-    print(users)
 
 
 @router.message(F.text.in_(text_step_wood))
@@ -187,7 +183,6 @@ async def step_woods(message: types.Message):
             rezult.append('sparrow')
     await message.answer(answer['step_1']['question'],
                          reply_markup=btn_step1())
-    print(users)
 
 
 @router.message(F.text.in_(text_step_plain))
@@ -214,4 +209,3 @@ async def step_1(message: types.Message):
             rezult.append('artiodactyls')
     await message.answer(answer['step_1']['question'],
                          reply_markup=btn_step1())
-    print(users)
